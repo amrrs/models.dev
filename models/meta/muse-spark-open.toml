@@ -1,0 +1,60 @@
+# Sources (accessed 2026-10-16):
+# https://research.meta.ai/blog/muse-spark-open
+# https://dev.meta.ai/docs/muse-spark-open
+# https://dev.meta.ai/docs/muse-spark-open/settings
+# https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B
+# 816B-total / 42B-active sparse MoE with built-in perception encoders; text, image, audio,
+# and video input, text output (dev.meta.ai model variants table).
+# Context: 1,048,576 tokens per the docs. No separate max-output cap is published, so
+# output takes the full window (same convention as muse-glimmer-30b).
+# knowledge: the open-weight chat template's default cutoff_date is 2026-01-04.
+# Release date per the blog and the license header ("Release date: October 15, 2026").
+name = "Muse Spark Open"
+description = "Open-weight 816B MoE multimodal model from Meta for coding, long-horizon agentic work, and multi-step reasoning"
+family = "muse"
+release_date = "2026-10-15"
+last_updated = "2026-10-15"
+attachment = true
+reasoning = true
+temperature = true
+tool_call = true
+structured_output = true
+knowledge = "2026-01-04"
+open_weights = true
+license = "Muse Model License"
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]
+
+[[weights]]
+label = "Hugging Face (BF16)"
+url = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+
+[[weights]]
+label = "Hugging Face (NVFP4)"
+url = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B-NVFP4"
+
+[[links]]
+label = "Announcement"
+url = "https://research.meta.ai/blog/muse-spark-open"
+type = "announcement"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B"
+type = "model_card"
+
+[[links]]
+label = "Developer docs"
+url = "https://dev.meta.ai/docs/muse-spark-open"
+type = "docs"
+
+[[links]]
+label = "License"
+url = "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B/blob/main/LICENSE.md"
+type = "license"
