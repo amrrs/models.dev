@@ -3,7 +3,15 @@
 #   input_cached_price_per_million_tokens = 0.015)
 # - https://tokenfactory.nebius.com/endpoints?modals=endpoint-details&model-id=MiniMaxAI/MiniMax-M3.1-Flash
 # Modalities: catalog type image2text with use_cases text/image, so input is text + images; the lab's
-#   video input is not listed for this host.
+#   video input is not listed for this host. Live 2026-10-24: a PNG data URL is read correctly; video_url returns
+#   400 "This model does not support video input".
+# Other live checks 2026-10-24 (/v1/chat/completions unless noted):
+# - Tools: tool_choice auto|required|named function|none all behave as expected.
+# - structured_output: response_format json_schema (strict, enum field) and json_object are enforced.
+# - Cache: automatic prefix cache, no markers; repeating a ~9k-token prompt reports
+#   prompt_tokens_details.cached_tokens = 8960, so cache = { implicit = true }.
+# - Limit: max_tokens = 1_048_000 accepted; 1_048_577 rejected ("supports at most 1048576 completion tokens").
+# - Responses: returns reasoning + message output items; reasoning.effort = none returns message only.
 # Effort: reasoning_effort = none|low|medium|high|xhigh|max (none = thinking off). Live probe 2026-10-24 on
 #   /v1/chat/completions: the gateway accepts none|minimal|low|medium|high|xhigh|max and rejects anything else
 #   with 422. none returns no reasoning_content (unlike the lab API, where disabling thinking is a 400).
@@ -23,6 +31,8 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576
