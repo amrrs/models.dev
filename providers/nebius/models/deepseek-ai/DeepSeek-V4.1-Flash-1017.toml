@@ -2,10 +2,14 @@
 # - https://tokenfactory.nebius.com/api/public/models_info (pricing, max_model_len = 1_048_576, type image2text,
 #   input_cached_price_per_million_tokens = 0.006)
 # - https://tokenfactory.nebius.com/endpoints?modals=endpoint-details&model-id=deepseek-ai/DeepSeek-V4.1-Flash-1017
-# Effort: reasoning_effort = none|low|high|max (none = thinking off). Same gateway behavior as the other
-#   DeepSeek V4 entries on this host (DeepSeek-V4.1-Flash, DeepSeek-V4-Flash-0731): the mid tiers collapse
-#   (minimal=low=medium, high=xhigh), leaving none/low/high/max as the distinct levels. Not probed on this
-#   model (no key).
+# Effort: reasoning_effort = none|low|high|max (none = thinking off). Live probe 2026-10-24 on
+#   /v1/chat/completions: none turns thinking off; minimal is rejected with 400 ("DeepSeek V4.1 reasoning_effort
+#   must be low, medium, high, xhigh, max, ..."); low/medium/high/xhigh are accepted but weren't separable on
+#   test prompts, and max thinks roughly 2x longer. This matches the other DeepSeek V4 entries on this host
+#   (DeepSeek-V4.1-Flash, DeepSeek-V4-Flash-0731), so the same none/low/high/max ladder is used.
+# Reasoning is returned in message.reasoning (not reasoning_content, which DeepSeek-V4.1-Flash on this host
+#   uses), checked live 2026-10-24. reasoning_field = "reasoning" is valid in v2 but v1's interleaved.field
+#   only allows reasoning_content|reasoning_details, so no reasoning_field is set rather than a wrong one.
 # Server reports model type image2text, so modalities are inherited from the lab entry.
 # Served window: max_model_len = 1_048_576 with no separate output cap, so context and output both take the
 #   full served window.
@@ -23,7 +27,6 @@ context = 1_048_576
 output = 1_048_576
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
